@@ -188,13 +188,27 @@ def Add_item_to_wishlist(Username,product_ID,gamers_json_file):
 def Remove_item_from_wishlist(Username,product_ID,gamers_json_file):
     '''Remove items from wishlist || Return True if removed successfully else False'''
     '''Write your code below'''
+    bool=False
+    entry=dict()
     with open(gamers_json_file, 'r+') as f:
         data = json.load(f)
         for j in data:
             for key,value in j.items():
                 if (value==Username):
                     if product_ID in j['Wishlist']:
-                        data.remove(j)
+                        j['Wishlist'].remove(product_ID)
+                        
+                        entry={"Email": j['Email'], "Username": j['Username'], "Password": j['Password'], "Contact Number": j['Contact Number'], "Wishlist": j['Wishlist'], "Cart":j['Cart']}
+                data.remove(j)
+                break;
+            bool=True
+        data.append(entry)
+    with open(gamers_json_file, "w") as file:
+        json.dump(data, file)
+    return bool
+                     
+
+            
 
 
 def Add_item_to_cart(Username,product_ID,Quantity,gamers_json_file,booking_start_date,booking_end_date,products_json_file):
@@ -222,6 +236,24 @@ def Add_item_to_cart(Username,product_ID,Quantity,gamers_json_file,booking_start
 def Remove_item_from_cart(Username,product_ID,gamers_json_file):
     '''Remove items from the cart || Return True if removed successfully else False'''
     '''Write your code below'''
+    bool=False
+    entry=dict()
+    with open(gamers_json_file, 'r+') as f:
+        data = json.load(f)
+        for j in data:
+            for key,value in j.items():
+                if (value==Username):
+                    if product_ID in j['Cart']:
+                        j['Cart'].remove(product_ID)
+                        
+                        entry={"Email": j['Email'], "Username": j['Username'], "Password": j['Password'], "Contact Number": j['Contact Number'], "Wishlist": j['Wishlist'], "Cart":j['Cart']}
+                data.remove(j)
+                break;
+            bool=True
+        data.append(entry)
+    with open(gamers_json_file, "w") as file:
+        json.dump(data, file)
+    return bool
     
 
 def View_Cart(Username,gamers_json_file):
@@ -299,6 +331,3 @@ def Fetch_all_orders(orders_json_file,Username):
                 except JSONDecodeError:
                     pass
     return All_Products_list
-    
-    
-
